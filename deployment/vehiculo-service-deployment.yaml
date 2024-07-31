@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehiculo-service-deployment
+  labels:
+    app: vehiculo-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: vehiculo-service-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vehiculo-service-deployment
+    spec:
+      containers:
+        - name: vehiculo-service
+          image: yuyunisse/vehiculo-service
+          ports:
+            - containerPort: 8094
+          env:
+            - name: SERVER_PORT
+              value: "0"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config-map
+                  key: DB_HOST_VEH
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config-map
+                  key: DB_PORT_VEH
+            - name: DB_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config-map
+                  key: DB_DBNAME_VEH
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_USER_VEH
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_PASSWORD_VEH

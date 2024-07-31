@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: http://eureka-server-service:8761/eureka/
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: '*'
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: historial-service
+          uri: lb://historial-service
+          predicates:
+            - Path=/historial/**
+        - id: reparaciones-service
+          uri: lb://reparaciones-service
+          predicates:
+            - Path=/reparaciones/**
+        - id: reportes-service
+          uri: lb://reportes-service
+          predicates:
+            - Path=/reportes/**
+        - id: vehiculo-service
+          uri: lb://vehiculo-service
+          predicates:
+            - Path=/vehiculo/**
+
+      
+  
